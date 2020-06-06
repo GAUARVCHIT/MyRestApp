@@ -66,3 +66,30 @@ class Order(models.Model):
     def __str__(self):
         return self.product.name
 
+
+
+
+
+
+
+# class TotalTournnament(models.Model):
+
+
+
+
+class Seasons(models.Model):
+    name=models.CharField(max_length=50,null=True)
+    starting_date=models.DateField(auto_now_add=False,null=True)
+    ending_date=models.DateField(auto_now_add=False,null=True)
+    description=models.CharField(max_length=200,null=True,blank=True)
+
+
+
+
+
+
+
+
+
+
+

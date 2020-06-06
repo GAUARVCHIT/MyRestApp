@@ -1,7 +1,7 @@
 from django.contrib import admin
 
 # Register your models here.
-from .models import Article,Customers,Tag,Product,Order
+from .models import Article,Customers,Tag,Product,Order,Seasons
 
 admin.site.register(Article)
 
@@ -12,3 +12,9 @@ admin.site.register(Product)
 admin.site.register(Order)
 
 admin.site.register(Tag)
+
+
+
+
+admin.site.register(Seasons)
+
