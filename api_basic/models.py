@@ -126,7 +126,7 @@ class Peoples(models.Model):
     # total_kills=models.IntegerField(null=True,blank=True)
     # total_knockout=models.IntegerField(null=True,blank=True)
     # total_damage=models.IntegerField( null=True,blank=True)
-    
+
 
 class TotalTournament(models.Model):
     season= models.OneToOneField(Seasons, on_delete=models.CASCADE)
@@ -142,6 +142,24 @@ class TotalTournament(models.Model):
         return self.name
 
 
+###################################################
+
+class Days(models.Model):
+    totalTournament=models.ManyToManyField(TotalTournament)
+
+
+class Maps(models.Model):
+    name=models.CharField(max_length=50,null=True)
+
+
+class Matches(models.Model):
+     days=models.ForeignKey(Days,null=True,on_delete=models.SET_NULL)
+     match_stating_time=models.DateTimeField(auto_now_add=False,null=True,blank=True)
+     maps=models.ForeignKey(Maps,on_delete=models.CASCADE)
+     
+
+
+###################################################
 
 
 
