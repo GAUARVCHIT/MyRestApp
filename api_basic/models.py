@@ -68,22 +68,44 @@ class Order(models.Model):
 
 
 
-
-
-
-
-# class TotalTournnament(models.Model):
-
-
-
-
 class Seasons(models.Model):
     name=models.CharField(max_length=50,null=True)
     starting_date=models.DateField(auto_now_add=False,null=True)
     ending_date=models.DateField(auto_now_add=False,null=True)
     description=models.CharField(max_length=200,null=True,blank=True)
 
+    def __str__(self):
+        return self.name
 
+class Organization(models.Model):
+    name=models.CharField(max_length=50,null=True)
+    description=models.CharField(max_length=200,null=True,blank=True)
+
+class Team(models.Model):
+    name=models.CharField(max_length=50,null=True)
+    short_name=models.CharField(max_length=10,null=True,blank=True)
+    description=models.CharField(max_length=200,null=True,blank=True)
+    organization=models.ManyToManyField(Organization)
+
+class Players(models.Model):
+    GENDER = ( 
+        ('Male', 'Male'),
+        ('Female', 'Female'),
+        ('Others', 'Others'),
+    )
+
+    name=models.CharField(max_length=50,null=True,blank=True)
+    ingame_name=models.CharField(max_length=50,null=True)
+    gender=models.CharField(max_length=20,null=True,choices=GENDER)
+    pubg_id=models.CharField(max_length=30,null=True,blank=True)
+    team=models.ForeignKey(Team,null=True, on_delete=models.SET_NULL)
+    
+
+
+class TotalTournament(models.Model):
+    season= models.OneToOneField(Seasons, on_delete=models.CASCADE)
+    teams_in_tournament= models.ManyToManyField(Team)
+    
 
 
 
