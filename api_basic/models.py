@@ -73,23 +73,39 @@ class Seasons(models.Model):
     starting_date=models.DateField(auto_now_add=False,null=True)
     ending_date=models.DateField(auto_now_add=False,null=True)
     description=models.CharField(max_length=200,null=True,blank=True)
+    
+    class Meta:
+        verbose_name_plural = "Seasons"
 
     def __str__(self):
         return self.name
 
-class Organization(models.Model):
+class Organizations(models.Model):
     name=models.CharField(max_length=50,null=True)
     description=models.CharField(max_length=200,null=True,blank=True)
 
-class Team(models.Model):
+    class Meta:
+        verbose_name_plural = "Organizations"
+
+    def __str__(self):
+        return self.name
+
+class Teams(models.Model):
     name=models.CharField(max_length=50,null=True)
     short_name=models.CharField(max_length=10,null=True,blank=True)
     description=models.CharField(max_length=200,null=True,blank=True)
-    organization=models.ManyToManyField(Organization,related_name='organizations_backing_teams')
+    organizations=models.ManyToManyField(Organizations,related_name='organizations_backing_teams')
+
+    class Meta:
+        verbose_name_plural = "Teams"
+
+    def __str__(self):
+        return self.short_name
 
 class Community(models.Model):
     role=models.CharField(max_length=100,null=True)
     description=models.CharField(max_length=200,null=True)
+
 
 class Peoples(models.Model):
     GENDER = ( 
@@ -102,7 +118,7 @@ class Peoples(models.Model):
     ingame_name=models.CharField(max_length=50,null=True)
     gender=models.CharField(max_length=20,null=True,choices=GENDER)
     pubg_id=models.CharField(max_length=30,null=True,blank=True)
-    team=models.ForeignKey(Team,null=True, on_delete=models.SET_NULL)
+    team=models.ForeignKey(Teams,null=True, on_delete=models.SET_NULL)
     community=models.ManyToManyField(Community, related_name='peoples_roles_in_community')
     mobile_no=models.IntegerField(blank=True,null=True)
     address=models.CharField(max_length=200,blank=True,null=True)
@@ -111,14 +127,19 @@ class Peoples(models.Model):
     # total_knockout=models.IntegerField(null=True,blank=True)
     # total_damage=models.IntegerField( null=True,blank=True)
     
-    
-
 
 class TotalTournament(models.Model):
     season= models.OneToOneField(Seasons, on_delete=models.CASCADE)
-    teams_in_tournament= models.ManyToManyField(Team,related_name='teams_participating_in_tournaments')
+    name=models.CharField(max_length=100,null=True)
+    short_name=models.CharField(max_length=20,null=True,blank=True)
+    teams= models.ManyToManyField(Teams,related_name='teams_participating_in_tournaments')
+    description=models.CharField(max_length=200,blank=True,null=True)
     
+    class Meta:
+        verbose_name_plural = "TotalTournament"
 
+    def __str__(self):
+        return self.name
 
 
 
