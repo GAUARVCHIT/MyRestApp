@@ -85,7 +85,7 @@ class Team(models.Model):
     name=models.CharField(max_length=50,null=True)
     short_name=models.CharField(max_length=10,null=True,blank=True)
     description=models.CharField(max_length=200,null=True,blank=True)
-    organization=models.ManyToManyField(Organization,related_name='Organizations backing Teams')
+    organization=models.ManyToManyField(Organization,related_name='organizations_backing_teams')
 
 class Community(models.Model):
     role=models.CharField(max_length=100,null=True)
@@ -103,20 +103,20 @@ class Peoples(models.Model):
     gender=models.CharField(max_length=20,null=True,choices=GENDER)
     pubg_id=models.CharField(max_length=30,null=True,blank=True)
     team=models.ForeignKey(Team,null=True, on_delete=models.SET_NULL)
-    community=models.ManyToManyField(Community, related_name='People Roles in Community')
-    mobile_no=models.IntegerField(max_length=10,blank=True,null=True)
-    address=models.IntegerField(max_length=200,blank=True,null=True)
-    # total_matches_played=models.IntegerField(max_length=10,null=True,blank=Ture)
-    # total_kills=models.IntegerField(max_length=10,null=True,blank=True)
-    # total_knockout=models.IntegerField(max_length=10,null=True,blank=True)
-    # total_damage=models.IntegerField(max_length=10, null=True,blank=True)
+    community=models.ManyToManyField(Community, related_name='peoples_roles_in_community')
+    mobile_no=models.IntegerField(blank=True,null=True)
+    address=models.CharField(max_length=200,blank=True,null=True)
+    # total_matches_played=models.IntegerField(null=True,blank=Ture)
+    # total_kills=models.IntegerField(null=True,blank=True)
+    # total_knockout=models.IntegerField(null=True,blank=True)
+    # total_damage=models.IntegerField( null=True,blank=True)
     
     
 
 
 class TotalTournament(models.Model):
     season= models.OneToOneField(Seasons, on_delete=models.CASCADE)
-    teams_in_tournament= models.ManyToManyField(Team,related_name='Teams Participating in Tournaments')
+    teams_in_tournament= models.ManyToManyField(Team,related_name='teams_participating_in_tournaments')
     
 
 
