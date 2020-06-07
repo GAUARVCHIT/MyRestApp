@@ -85,9 +85,13 @@ class Team(models.Model):
     name=models.CharField(max_length=50,null=True)
     short_name=models.CharField(max_length=10,null=True,blank=True)
     description=models.CharField(max_length=200,null=True,blank=True)
-    organization=models.ManyToManyField(Organization)
+    organization=models.ManyToManyField(Organization,related_name='Organizations backing Teams')
 
-class Players(models.Model):
+class Community(models.Model):
+    role=models.CharField(max_length=100,null=True)
+    description=models.CharField(max_length=200,null=True)
+
+class Peoples(models.Model):
     GENDER = ( 
         ('Male', 'Male'),
         ('Female', 'Female'),
@@ -99,12 +103,20 @@ class Players(models.Model):
     gender=models.CharField(max_length=20,null=True,choices=GENDER)
     pubg_id=models.CharField(max_length=30,null=True,blank=True)
     team=models.ForeignKey(Team,null=True, on_delete=models.SET_NULL)
+    community=models.ManyToManyField(Community, related_name='People Roles in Community')
+    mobile_no=models.IntegerField(max_length=10,blank=True,null=True)
+    address=models.IntegerField(max_length=200,blank=True,null=True)
+    # total_matches_played=models.IntegerField(max_length=10,null=True,blank=Ture)
+    # total_kills=models.IntegerField(max_length=10,null=True,blank=True)
+    # total_knockout=models.IntegerField(max_length=10,null=True,blank=True)
+    # total_damage=models.IntegerField(max_length=10, null=True,blank=True)
+    
     
 
 
 class TotalTournament(models.Model):
     season= models.OneToOneField(Seasons, on_delete=models.CASCADE)
-    teams_in_tournament= models.ManyToManyField(Team)
+    teams_in_tournament= models.ManyToManyField(Team,related_name='Teams Participating in Tournaments')
     
 
 
