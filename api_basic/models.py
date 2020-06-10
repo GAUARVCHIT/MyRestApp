@@ -122,18 +122,20 @@ class Peoples(models.Model):
     community=models.ManyToManyField(Community, related_name='peoples_roles_in_community')
     mobile_no=models.IntegerField(blank=True,null=True)
     address=models.CharField(max_length=200,blank=True,null=True)
-    # total_matches_played=models.IntegerField(null=True,blank=Ture)
-    # total_kills=models.IntegerField(null=True,blank=True)
-    # total_knockout=models.IntegerField(null=True,blank=True)
-    # total_damage=models.IntegerField( null=True,blank=True)
+    total_matches_played=models.PositiveIntegerField(null=True,blank=True,default=0)
+    total_kills=models.PositiveIntegerField(null=True,blank=True,default=0)
+    total_knockout=models.PositiveIntegerField(null=True,blank=True,default=0)
+    total_damage=models.PositiveIntegerField( null=True,blank=True,default=0)
 
 
 class TotalTournament(models.Model):
-    season= models.OneToOneField(Seasons, on_delete=models.CASCADE)
+    season= models.ForeignKey(Seasons,null=True, on_delete=models.CASCADE)
     name=models.CharField(max_length=100,null=True)
     short_name=models.CharField(max_length=20,null=True,blank=True)
     teams= models.ManyToManyField(Teams,related_name='teams_participating_in_tournaments')
     description=models.CharField(max_length=200,blank=True,null=True)
+
+    
     
     class Meta:
         verbose_name_plural = "TotalTournament"
@@ -146,17 +148,72 @@ class TotalTournament(models.Model):
 
 class Days(models.Model):
     totalTournament=models.ManyToManyField(TotalTournament)
+    date=models.DateField(auto_now_add=False,null=True)
+    
+    class Meta:
+        verbose_name_plural = "Days"
 
+    def __int__(self):
+        return self.date
 
 class Maps(models.Model):
     name=models.CharField(max_length=50,null=True)
 
+    class Meta:
+        verbose_name_plural = "Maps"
+
+    def __str__(self):
+        return self.name
+
+
+class PointsTableType(models.Model):
+    type=models.CharField(max_length=50,null=True)
+
+    class Meta:
+        verbose_name_plural = "PointsTableType"
+
+    def __str__(self):
+        return self.type
+
+class PointsTable(models.Model):
+    pointsTableType=models.ForeignKey(PointsTableType,null=True,on_delete=models.SET_NULL)
+    rank=models.IntegerField(null=True)
+    placement_point=models.IntegerField(null=True)
+    kill_points=models.IntegerField(null=True,default=1)
+
+    class Meta:
+        verbose_name_plural = "PointsTable"
+
+    def __str__(self):
+        return str(self.rank)
+
 
 class Matches(models.Model):
-     days=models.ForeignKey(Days,null=True,on_delete=models.SET_NULL)
-     match_stating_time=models.DateTimeField(auto_now_add=False,null=True,blank=True)
-     maps=models.ForeignKey(Maps,on_delete=models.CASCADE)
-     
+    days=models.ForeignKey(Days,null=True,on_delete=models.SET_NULL)
+    teams=models.ManyToManyField(Teams)
+    match_stating_time=models.DateTimeField(auto_now_add=False,null=True,blank=True)
+    maps=models.ForeignKey(Maps,on_delete=models.CASCADE)
+    
+    class Meta:
+        verbose_name_plural = "Matches"
+
+    def __str__(self):
+        return str(self.id)
+    
+class Results(models.Model):
+    teams=models.ForeignKey(Teams,null=True,on_delete=models.CASCADE)
+    points_table_type=models.ForeignKey(PointsTableType,null=True,on_delete=models.CASCADE)
+    position= models.IntegerField(blank=True,null=True)
+    kills=models.IntegerField(blank=True,null=True)
+    matches=models.ForeignKey(Matches,null=True,on_delete=models.CASCADE)
+    placement_point=models.IntegerField(null=True,default=0)
+    kill_points=models.IntegerField(null=True,default=0)
+    Total_points=models.IntegerField(null=True,default=0)
+    class Meta:
+        verbose_name_plural = "Results"
+
+    def __str__(self):
+        return str(self.matches)
 
 
 ###################################################

@@ -28,3 +28,19 @@ admin.site.register(Peoples)
 
 admin.site.register(TotalTournament)
 
+
+
+admin.site.register(Days)
+
+admin.site.register(Maps)
+
+admin.site.register(Results)
+
+admin.site.register(Matches)
+
+
+
+admin.site.register(PointsTableType)
+
+admin.site.register(PointsTable)
+
