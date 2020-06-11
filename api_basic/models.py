@@ -104,7 +104,13 @@ class Teams(models.Model):
 
 class Community(models.Model):
     role=models.CharField(max_length=100,null=True)
-    description=models.CharField(max_length=200,null=True)
+    description=models.CharField(max_length=200,null=True,blank=True)
+
+    class Meta:
+        verbose_name_plural = "Community"
+
+    def __str__(self):
+        return self.role
 
 
 class Peoples(models.Model):
@@ -127,6 +133,12 @@ class Peoples(models.Model):
     total_knockout=models.PositiveIntegerField(null=True,blank=True,default=0)
     total_damage=models.PositiveIntegerField( null=True,blank=True,default=0)
 
+    class Meta:
+        verbose_name_plural = "Peoples"
+
+    def __str__(self):
+        return self.ingame_name
+
 
 class TotalTournament(models.Model):
     season= models.ForeignKey(Seasons,null=True, on_delete=models.CASCADE)
@@ -135,15 +147,11 @@ class TotalTournament(models.Model):
     teams= models.ManyToManyField(Teams,related_name='teams_participating_in_tournaments')
     description=models.CharField(max_length=200,blank=True,null=True)
 
-    
-    
     class Meta:
         verbose_name_plural = "TotalTournament"
 
     def __str__(self):
         return self.name
-
-
 ###################################################
 
 class Days(models.Model):
@@ -164,7 +172,6 @@ class Maps(models.Model):
 
     def __str__(self):
         return self.name
-
 
 class PointsTableType(models.Model):
     type=models.CharField(max_length=50,null=True)
@@ -187,12 +194,12 @@ class PointsTable(models.Model):
     def __str__(self):
         return str(self.rank)
 
-
 class Matches(models.Model):
     days=models.ForeignKey(Days,null=True,on_delete=models.SET_NULL)
     teams=models.ManyToManyField(Teams)
     match_stating_time=models.DateTimeField(auto_now_add=False,null=True,blank=True)
     maps=models.ForeignKey(Maps,on_delete=models.CASCADE)
+    total_tournament=models.ForeignKey(TotalTournament,null=True,on_delete=models.CASCADE)
     
     class Meta:
         verbose_name_plural = "Matches"
@@ -214,6 +221,20 @@ class Results(models.Model):
 
     def __str__(self):
         return str(self.matches)
+
+class PlayerResult(models.Model):
+    teams=models.ForeignKey(Teams,null=True,on_delete=models.CASCADE)
+    peoples=models.ForeignKey(Peoples,null=True,on_delete=models.CASCADE)
+    matches=models.ForeignKey(Matches,null=True,on_delete=models.CASCADE)
+    kills=models.PositiveIntegerField(null=True,default=0)
+    damageDealt=models.PositiveIntegerField(null=True,default=0)
+    knockout=models.PositiveIntegerField(null=True,default=0)
+
+    class Meta:
+        verbose_name_plural = "PlayerResult"
+
+    def __str__(self):
+        return self.peoples.ingame_name
 
 
 ###################################################

@@ -1,18 +1,7 @@
 from django.db.models.signals import post_save
 # from django.contrib.auth.models import User
 # from django.contrib.auth.models import Group
-from .models import Customers,Results,PointsTableType,PointsTable
-
-
-# def customer_profile(sender,  instance,update_fields , created, **kwargs,):
-
-#     # if created:
-#     #     if instance.position==1:
-#     #         # instance.placement_point=20
-#     #         # instance.placement_point.add(20)
-            
-#     #         print('gaurav '+str(instance.placement_point))
-
+from .models import Customers,Results,PointsTableType,PointsTable,PlayerResult,Peoples
 
 #         post_save.disconnect(customer_profile, sender=sender)
 #         result=Results.objects.get(id=instance.id)
@@ -20,61 +9,41 @@ from .models import Customers,Results,PointsTableType,PointsTable
 #         result.save(update_fields=['placement_point'])
 #         post_save.connect(customer_profile, sender=sender)
 
-        
-    
-#     # if created:
-#     #     group= Group.objects.get(name= 'customers')
-#     #     instance.groups.add(group)
-
-#     #     Customers.objects.create(
-#     #         user=instance,
-#     #         name=instance.username,
-#     #     )
-
-# post_save.connect(customer_profile,sender=Results)
-
-
-
-
-# def generate_thumbnails(sender, instance=None, created=False, **kwargs):
-# def customer_profile(sender,  update_fields ,  created=False,instance=None, **kwargs):
-
-#     if not instance:
-#         return
-
-#     if hasattr(instance, '_dirty'):
-#         return
-
-#     result=Results.objects.get(id=instance.id)
-#     result.placement_point=20
-#     result.save(update_fields=['placement_point'])
-
-#     try:
-#         instance._dirty = True
-#         instance.save()
-#     finally:
-#         del instance._dirty
-
-# post_save.connect(customer_profile,sender=Results)
-
-
-
 def save_favorite(sender, instance, **kwargs):
-   fav = instance
-   resultupdate=Results.objects.filter(id=fav.id)
-   resultif=Results.objects.get(id=fav.id)
-   position= resultif.position
-   kills=resultif.kills
+   result_filter=Results.objects.filter(id=instance.id)
+   result_get=Results.objects.get(id=instance.id)
+   position = result_get.position
+   kills=result_get.kills
 
-#    if resultif.points_table_type.id==1:
-#     resultupdate.update(placement_point=4)
    
    for i in PointsTable.objects.all():
-       if i.pointsTableType.id==resultif.points_table_type.id and i.rank==position :
-           resultupdate.update(placement_point=i.placement_point,kill_points=i.kill_points*kills,Total_points=i.placement_point+i.kill_points*kills)
-           break
+       if i.pointsTableType.id==result_get.points_table_type.id and i.rank==position :
+           result_filter.update(placement_point=i.placement_point,kill_points=i.kill_points*kills,Total_points=i.placement_point+i.kill_points*kills)
+           break 
 
-    
-   
-   
 post_save.connect(save_favorite, sender=Results)
+
+
+def player_career(sender,instance,created,**kwargs):
+   # player_result_update=PlayerResult.objects.filter(id=instance.id)
+   # player_result_get=PlayerResult.objects.get(id=instance.id)
+
+   # peoples_get_id=player_result_get.peoples.id
+   # print(peoples_get_id)
+
+   # peoples_result_filter=Peoples.objects.filter(id=peoples_get_id)
+   # peoples_result_get=Peoples.objects.get(id=peoples_get_id)
+   # peoples_result_filter.update(total_kills=player_result_get.kills+peoples_result_get.total_kills)
+   
+   if created:
+         player_result_get=PlayerResult.objects.get(id=instance.id)
+
+         peoples_get_id=player_result_get.peoples.id
+         print(peoples_get_id)
+
+         peoples_result_filter=Peoples.objects.filter(id=peoples_get_id)
+         peoples_result_get=Peoples.objects.get(id=peoples_get_id)
+         peoples_result_filter.update(total_kills=player_result_get.kills+peoples_result_get.total_kills)
+
+
+post_save.connect(player_career,sender=PlayerResult)

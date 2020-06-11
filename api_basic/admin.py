@@ -44,3 +44,5 @@ admin.site.register(PointsTableType)
 
 admin.site.register(PointsTable)
 
+
+admin.site.register(PlayerResult)
