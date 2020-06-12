@@ -102,12 +102,12 @@ class Teams(models.Model):
     def __str__(self):
         return self.short_name
 
-class Community(models.Model):
+class RolesInCommunity(models.Model):
     role=models.CharField(max_length=100,null=True)
     description=models.CharField(max_length=200,null=True,blank=True)
 
     class Meta:
-        verbose_name_plural = "Community"
+        verbose_name_plural = "RolesInCommunity"
 
     def __str__(self):
         return self.role
@@ -125,8 +125,8 @@ class Peoples(models.Model):
     gender=models.CharField(max_length=20,null=True,choices=GENDER)
     pubg_id=models.CharField(max_length=30,null=True,blank=True)
     team=models.ForeignKey(Teams,null=True, on_delete=models.SET_NULL)
-    community=models.ManyToManyField(Community, related_name='peoples_roles_in_community')
-    mobile_no=models.IntegerField(blank=True,null=True)
+    RolesInCommunity=models.ManyToManyField(RolesInCommunity, related_name='peoples_roles_in_Community')
+    mobile_no=models.PositiveIntegerField(blank=True,null=True)
     address=models.CharField(max_length=200,blank=True,null=True)
     total_matches_played=models.PositiveIntegerField(null=True,blank=True,default=0)
     total_kills=models.PositiveIntegerField(null=True,blank=True,default=0)
@@ -184,9 +184,9 @@ class PointsTableType(models.Model):
 
 class PointsTable(models.Model):
     pointsTableType=models.ForeignKey(PointsTableType,null=True,on_delete=models.SET_NULL)
-    rank=models.IntegerField(null=True)
-    placement_point=models.IntegerField(null=True)
-    kill_points=models.IntegerField(null=True,default=1)
+    rank=models.PositiveIntegerField(null=True)
+    placement_point=models.PositiveIntegerField(null=True)
+    kill_points=models.PositiveIntegerField(null=True,default=1)
 
     class Meta:
         verbose_name_plural = "PointsTable"
@@ -210,12 +210,12 @@ class Matches(models.Model):
 class Results(models.Model):
     teams=models.ForeignKey(Teams,null=True,on_delete=models.CASCADE)
     points_table_type=models.ForeignKey(PointsTableType,null=True,on_delete=models.CASCADE)
-    position= models.IntegerField(blank=True,null=True)
-    kills=models.IntegerField(blank=True,null=True)
+    position= models.PositiveIntegerField(blank=True,null=True)
+    kills=models.PositiveIntegerField(blank=True,null=True)
     matches=models.ForeignKey(Matches,null=True,on_delete=models.CASCADE)
-    placement_point=models.IntegerField(null=True,default=0)
-    kill_points=models.IntegerField(null=True,default=0)
-    Total_points=models.IntegerField(null=True,default=0)
+    placement_point=models.PositiveIntegerField(null=True,default=0)
+    kill_points=models.PositiveIntegerField(null=True,default=0)
+    Total_points=models.PositiveIntegerField(null=True,default=0)
     class Meta:
         verbose_name_plural = "Results"
 

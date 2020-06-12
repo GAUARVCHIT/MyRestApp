@@ -22,7 +22,7 @@ admin.site.register(Organizations)
 
 admin.site.register(Teams)
 
-admin.site.register(Community)
+admin.site.register(RolesInCommunity)
 
 admin.site.register(Peoples)
 
